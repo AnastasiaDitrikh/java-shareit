@@ -29,7 +29,7 @@ public class UserServiceDtoImpl {
         if (!isUserInMemory(id)) {
             throw new NotFoundException("Пользователя с " + id + " не существует");
         }
-        User user= new User();
+        User user = new User();
         UserDto userFromMemory = findById(id);
 
         if (userDto.getName() != null) {

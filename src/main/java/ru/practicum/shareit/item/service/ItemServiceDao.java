@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface ItemServiceDao {
 
-        Item add(Item item);
+    Item add(Item item);
 
-        Item update(Item item);
+    Item update(Item item);
 
-        Optional<Item> findItemById(Long itemId);
+    Optional<Item> findItemById(Long itemId);
 
-        List<Item> findAll(Long userId);
+    List<Item> findAll(Long userId);
 
-        List<Item> search(String text);
-    }
+    List<Item> search(String text);
+}

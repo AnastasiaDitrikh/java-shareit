@@ -30,7 +30,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
 
     @Override
     public User update(Long id, User user) throws NotFoundException {
-        if (users.containsKey(id)){
+        if (users.containsKey(id)) {
             checkEmail(user);
             users.put(id, user);
         } else {
@@ -50,7 +50,7 @@ public class UserServiceDaoImpl implements UserServiceDao {
     }
 
     @Override
-    public void delete(Long id) throws NotFoundException{
+    public void delete(Long id) throws NotFoundException {
         if (users.containsKey(id)) {
             users.remove(id);
         } else {

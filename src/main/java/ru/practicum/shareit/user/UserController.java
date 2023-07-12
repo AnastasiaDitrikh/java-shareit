@@ -17,7 +17,7 @@ public class UserController {
     private final UserServiceDtoImpl userService;
 
     @PostMapping
-    public UserDto add (@Valid @RequestBody UserDto userDto) {
+    public UserDto add(@Valid @RequestBody UserDto userDto) {
         return userService.add(userDto);
     }
 

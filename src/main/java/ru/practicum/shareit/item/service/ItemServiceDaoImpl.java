@@ -13,7 +13,7 @@ public class ItemServiceDaoImpl implements ItemServiceDao {
 
     private final Map<Long, List<Item>> items = new HashMap<>();
 
-    private Long generatorId=1L;
+    private Long generatorId = 1L;
 
     @Override
     public Item add(Item item) {
