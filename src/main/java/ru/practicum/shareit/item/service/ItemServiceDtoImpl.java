@@ -8,25 +8,31 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.service.UserServiceDtoImpl;
+import ru.practicum.shareit.user.service.UserServiceDaoImpl;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItemServiceDtoImpl {
+public class ItemServiceDtoImpl implements ItemServiceDto {
     private final ItemServiceDao itemDao;
-    private final UserServiceDtoImpl userService;
+    private final UserServiceDaoImpl userService;
 
+    @Override
     public ItemDto add(Long userId, ItemDto itemDto) {
-        UserDto user = userService.findById(userId);
+        UserDto user = UserMapper.toUserDto(userService.findById(userId));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner((UserMapper.toUser(user)).getId());
         return ItemMapper.toItemDto(itemDao.add(item));
     }
 
+    @Override
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
-        UserDto user = userService.findById(userId);
+        UserDto user = UserMapper.toUserDto(userService.findById(userId));
         Optional<Item> itemOptional = itemDao.findItemById(itemId);
         if (itemOptional.isPresent()) {
             if (!itemOptional.get().getOwner().equals(userId)) {
@@ -50,10 +56,11 @@ public class ItemServiceDtoImpl {
 
             return ItemMapper.toItemDto(itemDao.update(item));
         }
-        return null;
+        return itemDto;
     }
 
-    public ItemDto findItemById(Long userId, Long itemId) throws NotFoundException {
+    @Override
+    public ItemDto findItemById(Long userId, Long itemId) {
         userService.findById(userId);
         Optional<Item> itemGet = itemDao.findItemById(itemId);
         if (itemGet.isEmpty()) {
@@ -63,29 +70,24 @@ public class ItemServiceDtoImpl {
         return ItemMapper.toItemDto(itemGet.get());
     }
 
+    @Override
     public List<ItemDto> findAll(Long userId) {
         userService.findById(userId);
         List<Item> itemList = itemDao.findAll(userId);
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item item : itemList) {
-            itemDtoList.add(ItemMapper.toItemDto(item));
-        }
-        return itemDtoList;
+        return itemList.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
+    @Override
     public List<ItemDto> search(Long userId, String text) {
         userService.findById(userId);
         if (text.isBlank()) {
             return Collections.emptyList();
         }
         List<Item> itemList = itemDao.search(text);
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item item : itemList) {
-            itemDtoList.add(ItemMapper.toItemDto(item));
-        }
-        return itemDtoList;
+        return itemList.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 }
-
-
-

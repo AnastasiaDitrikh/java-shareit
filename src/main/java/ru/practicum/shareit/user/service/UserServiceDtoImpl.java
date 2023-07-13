@@ -4,7 +4,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.exceptions.ValidationException;
+import ru.practicum.shareit.exceptions.NotUniqueEmailException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserMapper;
@@ -14,18 +14,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceDtoImpl {
+public class UserServiceDtoImpl implements UserServiceDto {
 
     private final UserServiceDao userServiceDao;
 
+    @Override
     public UserDto add(UserDto userDto) {
         User user = UserMapper.toUser(userDto);
         checkEmail(user);
         return UserMapper.toUserDto(userServiceDao.add(user));
     }
 
-
-    public UserDto update(Long id, UserDto userDto) throws NotFoundException {
+    @Override
+    public UserDto update(Long id, UserDto userDto) {
         if (!isUserInMemory(id)) {
             throw new NotFoundException("Пользователя с " + id + " не существует");
         }
@@ -47,8 +48,8 @@ public class UserServiceDtoImpl {
         return UserMapper.toUserDto(userServiceDao.update(id, user));
     }
 
-
-    public UserDto findById(Long id) throws NotFoundException {
+    @Override
+    public UserDto findById(Long id) {
         if (!isUserInMemory(id)) {
             throw new NotFoundException("Пользователя с " + id + " не существует");
         }
@@ -56,8 +57,8 @@ public class UserServiceDtoImpl {
         return UserMapper.toUserDto(user);
     }
 
-
-    public void delete(Long id) throws NotFoundException {
+    @Override
+    public void delete(Long id) {
         if (isUserInMemory(id)) {
             userServiceDao.delete(id);
         } else {
@@ -65,35 +66,24 @@ public class UserServiceDtoImpl {
         }
     }
 
+    @Override
     public List<UserDto> findAll() {
         return userServiceDao.findAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
-
-    private void checkEmail(User user) throws ValidationException {
-        for (User thisUser : userServiceDao.findAll()) {
-            if (thisUser.getEmail().equals(user.getEmail()) && !thisUser.getId().equals(user.getId())) {
-                throw new ValidationException("Пользователь с такой электронной почтой уже существует");
-            }
+    private void checkEmail(User user) {
+        boolean isEmailNotUnique = userServiceDao.findAll().stream()
+                .anyMatch(thisUser -> thisUser.getEmail().equals(user.getEmail())
+                        && !thisUser.getId().equals(user.getId()));
+        if (isEmailNotUnique) {
+            throw new NotUniqueEmailException("Пользователь с такой электронной почтой уже существует");
         }
     }
-
 
     private boolean isUserInMemory(Long userId) {
-        for (User user : userServiceDao.findAll()) {
-            if (user.getId().equals(userId)) {
-                return true;
-            }
-        }
-        return false;
+        return userServiceDao.findAll().stream()
+                .anyMatch(user -> user.getId().equals(userId));
     }
 }
-
-
-
-
-
-
-

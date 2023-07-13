@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface UserServiceDao {
 
-
     User add(User user);
 
     User update(Long id, User user);
@@ -16,8 +15,4 @@ public interface UserServiceDao {
     void delete(Long id);
 
     List<User> findAll();
-
 }
-
-
-

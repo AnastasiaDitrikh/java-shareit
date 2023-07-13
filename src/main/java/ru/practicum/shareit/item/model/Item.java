@@ -4,20 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Item {
     private Long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
     private Boolean available;
     private Long owner;
+    private Long request;
 
     public Item(Long id, String name, String description, Boolean available, Long request) {
         this.id = id;
@@ -26,6 +22,4 @@ public class Item {
         this.available = available;
         this.request = request;
     }
-
-    private Long request;
 }

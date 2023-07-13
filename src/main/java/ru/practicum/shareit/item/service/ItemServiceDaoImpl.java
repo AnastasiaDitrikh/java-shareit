@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -12,7 +13,6 @@ import java.util.*;
 public class ItemServiceDaoImpl implements ItemServiceDao {
 
     private final Map<Long, List<Item>> items = new HashMap<>();
-
     private Long generatorId = 1L;
 
     @Override
@@ -28,48 +28,36 @@ public class ItemServiceDaoImpl implements ItemServiceDao {
     @Override
     public Item update(Item item) {
         List<Item> userItems = items.get(item.getOwner());
-        List<Item> toRemove = new ArrayList<>();
-        for (Item userItem : userItems) {
-            if (userItem.getId().equals(item.getId())) {
-                toRemove.add(userItem);
-            }
-        }
+        List<Item> toRemove = userItems.stream()
+                .filter(userItem -> userItem.getId().equals(item.getId()))
+                .collect(Collectors.toList());
         userItems.removeAll(toRemove);
         userItems.add(item);
-
         return item;
     }
 
 
     @Override
     public Optional<Item> findItemById(Long itemId) {
-        for (List<Item> itemList : items.values()) {
-            for (Item item : itemList) {
-                if (item.getId().equals(itemId)) {
-                    return Optional.of(item);
-                }
-            }
-        }
-        return Optional.empty();
+        return items.values().stream()
+                .flatMap(Collection::stream)
+                .filter(item -> item.getId().equals(itemId))
+                .findFirst();
     }
 
     @Override
     public List<Item> findAll(Long userId) {
-        return items.get(userId);
+        return new ArrayList<>(items.get(userId));
     }
 
     @Override
     public List<Item> search(String text) {
-        List<Item> itemListSearch = new ArrayList<>();
-        for (List<Item> itemList : items.values()) {
-            for (Item item : itemList) {
-                if (item.getAvailable().equals(true)) {
-                    if (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase())) {
-                        itemListSearch.add(item);
-                    }
-                }
-            }
-        }
-        return itemListSearch;
+        String searchText = text.toLowerCase();
+        return items.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Item::getAvailable)
+                .filter(item -> item.getName().toLowerCase().contains(searchText)
+                        || item.getDescription().toLowerCase().contains(searchText))
+                .collect(Collectors.toList());
     }
 }
