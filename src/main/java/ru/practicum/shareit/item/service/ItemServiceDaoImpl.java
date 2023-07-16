@@ -1,14 +1,13 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class ItemServiceDaoImpl implements ItemServiceDao {
 
@@ -21,13 +20,13 @@ public class ItemServiceDaoImpl implements ItemServiceDao {
         generatorId++;
         List<Item> listItems = new ArrayList<>();
         listItems.add(item);
-        items.put(item.getOwner(), listItems);
+        items.put(item.getOwner().getId(), listItems);
         return item;
     }
 
     @Override
     public Item update(Item item) {
-        List<Item> userItems = items.get(item.getOwner());
+        List<Item> userItems = items.get(item.getOwner().getId());
         List<Item> toRemove = userItems.stream()
                 .filter(userItem -> userItem.getId().equals(item.getId()))
                 .collect(Collectors.toList());

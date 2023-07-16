@@ -2,7 +2,9 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemServiceDtoImpl;
 
@@ -51,5 +53,13 @@ public class ItemController {
                                      @RequestParam(name = "text") String text) {
         log.info("GET Запрос на поиск предметов");
         return itemService.search(userId, text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@RequestHeader(USER_HEADER) Long userId,
+                                    @Validated @RequestBody CommentDto commentDto,
+                                    @PathVariable Long itemId) {
+        log.info("POST Запрос на создание комментария");
+        return itemService.createComment(userId, commentDto, itemId);
     }
 }
