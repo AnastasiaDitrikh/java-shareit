@@ -2,14 +2,15 @@ package ru.practicum.shareit.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +
@@ -120,4 +121,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.status = 'APPROVED' " +
             "AND b.end_date < ?3 ", nativeQuery = true)
     List<Booking> findAllByUserBookings(Long userId, Long itemId, LocalDateTime now);
+
+    List<Booking> findAllByItemInAndStatusOrderByStartAsc(List<Item> items, BookingStatus status);
+
+    List<Booking> findAllByItemAndStatusOrderByStartAsc(Item item, BookingStatus bookingStatus);
+
 }

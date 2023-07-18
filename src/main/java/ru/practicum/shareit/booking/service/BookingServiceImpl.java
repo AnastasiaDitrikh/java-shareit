@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
@@ -15,7 +16,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.service.UserServiceDto;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,12 +25,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-    private final UserServiceDto userService;
+    private final UserService userService;
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public BookingDtoOut add(Long userId, BookingDto bookingDto) {
         User user = UserMapper.toUser(userService.findById(userId));
         Optional<Item> itemById = itemRepository.findById(bookingDto.getItemId());
@@ -43,6 +46,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDtoOut update(Long userId, Long bookingId, Boolean approved) {
         Booking booking = validateBookingDetails(userId, bookingId, 1);
         assert booking != null;
@@ -52,6 +56,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDtoOut findBookingByUserId(Long userId, Long bookingId) {
         Booking booking = validateBookingDetails(userId, bookingId, 2);
         assert booking != null;
@@ -59,6 +64,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingDtoOut> findAll(Long bookerId, String state) {
         validState(state);
         userService.findById(bookerId);
@@ -97,6 +103,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingDtoOut> findAllOwner(Long ownerId, String state) {
         validState(state);
         userService.findById(ownerId);

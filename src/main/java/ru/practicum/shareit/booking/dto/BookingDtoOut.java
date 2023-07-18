@@ -3,14 +3,10 @@ package ru.practicum.shareit.booking.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.UserDto;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,15 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookingDtoOut {
     private Long id;
-    private Item item;
-    @NotNull
-    @FutureOrPresent
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    private ItemDto item;
     private LocalDateTime start;
-    @NotNull
-    @Future
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
     private LocalDateTime end;
-    private User booker;
+    private UserDto booker;
     private BookingStatus status;
+
+    public Long getItemId() {
+        return item.getId();
+    }
+
+    public long getBookerId() {
+        return booker.getId();
+    }
 }
