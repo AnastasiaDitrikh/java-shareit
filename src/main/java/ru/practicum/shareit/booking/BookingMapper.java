@@ -25,7 +25,7 @@ public class BookingMapper {
     public BookingDtoOut toBookingOut(Booking booking) {
         return new BookingDtoOut(
                 booking.getId(),
-                ItemMapper.toItemDto(booking.getItem()),
+                ItemMapper.toItemDtoOut(booking.getItem()),
                 booking.getStart(),
                 booking.getEnd(),
                 UserMapper.toUserDto(booking.getBooker()),

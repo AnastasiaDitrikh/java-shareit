@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
@@ -27,16 +24,18 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User owner;
     @ManyToOne
     @JoinColumn(name = "request_id")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private ItemRequest request;
 
-    public Item(Long id, String name, String description, Boolean available) {
-        this.id = id;
+    public Item(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
         this.available = available;
     }
+
 }

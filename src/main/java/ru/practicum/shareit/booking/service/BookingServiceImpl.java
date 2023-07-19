@@ -66,9 +66,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDtoOut> findAll(Long bookerId, String state) {
-        validState(state);
         userService.findById(bookerId);
-        switch (BookingState.valueOf(state)) {
+        switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByBookerId(bookerId).stream()
                         .map(BookingMapper::toBookingOut)
@@ -105,9 +104,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDtoOut> findAllOwner(Long ownerId, String state) {
-        validState(state);
         userService.findById(ownerId);
-        switch (BookingState.valueOf(state)) {
+        switch (validState(state)) {
             case ALL:
                 return bookingRepository.findAllBookingsByOwnerId(ownerId).stream()
                         .map(BookingMapper::toBookingOut)
@@ -154,11 +152,12 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void validState(String bookingState) {
+    private BookingState validState(String bookingState) {
         BookingState state = BookingState.from(bookingState);
         if (state == null) {
-            throw new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS");
+            throw new IllegalArgumentException("Unknown state: " + bookingState);
         }
+        return state;
     }
 
     private Booking validateBookingDetails(Long userId, Long bookingId, Integer number) {

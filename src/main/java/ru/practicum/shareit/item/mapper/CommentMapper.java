@@ -11,27 +11,22 @@ import ru.practicum.shareit.user.User;
 public class CommentMapper {
     public CommentDto toCommentDto(Comment comment) {
         return new CommentDto(
-                comment.getId(),
-                comment.getText(),
-                comment.getAuthor().getName(),
-                comment.getCreated());
+                comment.getText());
     }
 
     public CommentDtoOut toCommentDtoOut(Comment comment) {
         return new CommentDtoOut(
                 comment.getId(),
                 comment.getText(),
-                ItemMapper.toItemDto(comment.getItem()),
                 comment.getAuthor().getName(),
-                comment.getCreated());
+                comment.getCreated(),
+                comment.getItem().getId());
     }
 
     public Comment toComment(CommentDto commentDto, Item item, User user) {
         return new Comment(
-                commentDto.getId(),
                 commentDto.getText(),
                 item,
-                user,
-                commentDto.getCreated());
+                user);
     }
 }

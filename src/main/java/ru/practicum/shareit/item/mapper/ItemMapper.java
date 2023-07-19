@@ -2,16 +2,17 @@ package ru.practicum.shareit.item.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
+import ru.practicum.shareit.item.dto.CommentDtoOut;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserMapper;
+
+import java.util.List;
 
 @UtilityClass
 public class ItemMapper {
     public ItemDto toItemDto(Item item) {
         return new ItemDto(
-                item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable());
@@ -22,27 +23,25 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable(),
-                UserMapper.toUserDto((item.getOwner())),
-                item.getRequest());
+                item.getAvailable());
     }
 
-    public ItemDtoOut toItemDtoOut(Item item, BookingDtoOut lastBooking, BookingDtoOut nextBooking) {
+    public ItemDtoOut toItemDtoOut(Item item, BookingDtoOut lastBooking, List<CommentDtoOut> comments, BookingDtoOut nextBooking) {
         return new ItemDtoOut(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                UserMapper.toUserDto((item.getOwner())),
-                item.getRequest(),
+                // задел на следующий спринт ItemRequestMapper.toItemRequestDtoOut(item.getRequest()),
                 lastBooking,
-                nextBooking);
+                comments,
+                nextBooking
+        );
     }
 
 
     public Item toItem(ItemDto itemDto) {
         return new Item(
-                itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable());

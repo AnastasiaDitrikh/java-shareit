@@ -28,4 +28,9 @@ public class ItemRequest {
     private User requester;
 
     private LocalDateTime created;
+
+    public ItemRequest(Long id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 }
