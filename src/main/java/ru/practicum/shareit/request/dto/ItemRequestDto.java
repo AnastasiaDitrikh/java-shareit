@@ -1,27 +1,32 @@
 package ru.practicum.shareit.request.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.user.UserDto;
+import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.shareit.item.dto.ItemDtoOut;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ItemRequestDto {
-
     private Long id;
+
+    @NotNull
+    @Size(max = 255)
     private String description;
-    private UserDto requester;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime created;
 
-    public ItemRequestDto(Long id, String description) {
-        this.id = id;
-        this.description = description;
-    }
+    private List<ItemDtoOut> items;
 }
+
