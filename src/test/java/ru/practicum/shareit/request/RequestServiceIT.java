@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -40,7 +41,7 @@ public class RequestServiceIT {
         UserDto addedUser = userService.add(userDto);
         requestService.add(addedUser.getId(), requestDto);
 
-        List<ItemRequestDto> actualRequests = requestService.getUserRequests(addedUser.getId());
+        List<ItemRequestDtoOut> actualRequests = requestService.getUserRequests(addedUser.getId());
 
         assertEquals("request description", actualRequests.get(0).getDescription());
     }

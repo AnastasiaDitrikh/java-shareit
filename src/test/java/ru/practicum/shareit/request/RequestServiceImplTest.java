@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
 import ru.practicum.shareit.user.User;
@@ -64,45 +65,46 @@ class RequestServiceImplTest {
 
     @Test
     void addNewRequest() {
-        ItemRequestDto expectedRequestDto = ItemRequestMapper.toRequestDto(request);
+        ItemRequestDto requestDto = ItemRequestMapper.toRequestDto(request);
+        ItemRequestDtoOut expectedRequestDto = ItemRequestMapper.toRequestDtoOut(request);
         when(userService.findById(user.getId())).thenReturn(userDto);
         when(requestRepository.save(any(ItemRequest.class))).thenReturn(request);
 
-        ItemRequestDto actualRequestDto = requestService.add(user.getId(), expectedRequestDto);
+        ItemRequestDtoOut actualRequestDto = requestService.add(user.getId(), requestDto);
 
         assertEquals(expectedRequestDto, actualRequestDto);
     }
 
     @Test
     void getUserRequests() {
-        List<ItemRequestDto> expectedRequestsDto = List.of(ItemRequestMapper.toRequestDto(request));
+        List<ItemRequestDtoOut> expectedRequestsDto = List.of(ItemRequestMapper.toRequestDtoOut(request));
         when(userService.findById(user.getId())).thenReturn(userDto);
         when(requestRepository.findAllByRequesterId(userDto.getId())).thenReturn(List.of(request));
 
-        List<ItemRequestDto> actualRequestsDto = requestService.getUserRequests(userDto.getId());
+        List<ItemRequestDtoOut> actualRequestsDto = requestService.getUserRequests(userDto.getId());
 
         assertEquals(expectedRequestsDto, actualRequestsDto);
     }
 
     @Test
     void getAllRequests() {
-        List<ItemRequestDto> expectedRequestsDto = List.of(ItemRequestMapper.toRequestDto(request));
+        List<ItemRequestDtoOut> expectedRequestsDto = List.of(ItemRequestMapper.toRequestDtoOut(request));
         when(userService.findById(user.getId())).thenReturn(userDto);
         when(requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of(request));
 
-        List<ItemRequestDto> actualRequestsDto = requestService.getAllRequests(userDto.getId(), 0, 10);
+        List<ItemRequestDtoOut> actualRequestsDto = requestService.getAllRequests(userDto.getId(), 0, 10);
 
         assertEquals(expectedRequestsDto, actualRequestsDto);
     }
 
     @Test
     void getRequestById() {
-        ItemRequestDto expectedRequestDto = ItemRequestMapper.toRequestDto(request);
+        ItemRequestDtoOut expectedRequestDto = ItemRequestMapper.toRequestDtoOut(request);
         when(userService.findById(user.getId())).thenReturn(userDto);
         when(requestRepository.findById(request.getId())).thenReturn(Optional.of(request));
 
-        ItemRequestDto actualRequestDto = requestService.getRequestById(userDto.getId(), request.getId());
+        ItemRequestDtoOut actualRequestDto = requestService.getRequestById(userDto.getId(), request.getId());
 
         assertEquals(expectedRequestDto, actualRequestDto);
     }

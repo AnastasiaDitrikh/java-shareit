@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.User;
 
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.item.ItemController.USER_HEADER;
 
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerTest {
@@ -39,7 +40,7 @@ class ItemRequestControllerTest {
             .email("email@email.com")
             .build();
 
-    private final ItemRequestDto requestDto = ItemRequestDto.builder()
+    private final ItemRequestDtoOut requestDto = ItemRequestDtoOut.builder()
             .id(1L)
             .description("description")
             .created(LocalDateTime.now())
@@ -55,7 +56,7 @@ class ItemRequestControllerTest {
                         .content(objectMapper.writeValueAsString(requestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType("application/json")
-                        .header("X-Sharer-User-Id", user.getId()))
+                        .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -72,7 +73,7 @@ class ItemRequestControllerTest {
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType("application/json")
-                        .header("X-Sharer-User-Id", user.getId()))
+                        .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -91,7 +92,7 @@ class ItemRequestControllerTest {
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests/all")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType("application/json")
-                        .header("X-Sharer-User-Id", user.getId()))
+                        .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -110,7 +111,7 @@ class ItemRequestControllerTest {
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/requests/{requestId}", requestId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType("application/json")
-                        .header("X-Sharer-User-Id", user.getId()))
+                        .header(USER_HEADER, user.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

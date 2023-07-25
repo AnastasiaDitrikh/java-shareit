@@ -9,6 +9,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
@@ -28,41 +29,41 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     @Transactional
-    public ItemRequestDto add(Long userId, ItemRequestDto itemRequestDto) {
+    public ItemRequestDtoOut add(Long userId, ItemRequestDto itemRequestDto) {
         User user = UserMapper.toUser(userService.findById(userId));
         ItemRequest request = ItemRequestMapper.toRequest(user, itemRequestDto);
         request.setRequester(user);
-        return ItemRequestMapper.toRequestDto(requestRepository.save(request));
+        return ItemRequestMapper.toRequestDtoOut(requestRepository.save(request));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemRequestDto> getUserRequests(Long userId) {
+    public List<ItemRequestDtoOut> getUserRequests(Long userId) {
         UserMapper.toUser(userService.findById(userId));
         List<ItemRequest> itemRequestList = requestRepository.findAllByRequesterId(userId);
         return itemRequestList.stream()
-                .map(ItemRequestMapper::toRequestDto)
+                .map(ItemRequestMapper::toRequestDtoOut)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ItemRequestDto> getAllRequests(Long userId, Integer from, Integer size) {
+    public List<ItemRequestDtoOut> getAllRequests(Long userId, Integer from, Integer size) {
         UserMapper.toUser(userService.findById(userId));
         List<ItemRequest> itemRequestList = requestRepository.findAllByRequester_IdNotOrderByCreatedDesc(userId, PageRequest.of(from / size, size));
         return itemRequestList.stream()
-                .map(ItemRequestMapper::toRequestDto)
+                .map(ItemRequestMapper::toRequestDtoOut)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemRequestDto getRequestById(Long userId, Long requestId) {
+    public ItemRequestDtoOut getRequestById(Long userId, Long requestId) {
         userService.findById(userId);
         Optional<ItemRequest> requestById = requestRepository.findById(requestId);
         if (requestById.isEmpty()) {
             throw new NotFoundException(String.format("Запрос с id: %s " +
                     "не был найден.", requestId));
         }
-        return ItemRequestMapper.toRequestDto(requestById.get());
+        return ItemRequestMapper.toRequestDtoOut(requestById.get());
     }
 }
 

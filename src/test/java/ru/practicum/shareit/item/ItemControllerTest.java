@@ -21,8 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.practicum.shareit.item.ItemController.USER_HEADER;
 
@@ -228,5 +227,39 @@ class ItemControllerTest {
                 .getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(commentDtoOut), result);
+    }
+
+    @Test
+    @SneakyThrows
+    void findAllItemsShouldReturnBadRequest() {
+        Integer from = -1;
+        Integer size = 10;
+
+        mockMvc.perform(get("/items")
+                        .param("from", String.valueOf(from))
+                        .param("size", String.valueOf(size))
+                        .contentType("application/json")
+                        .header(USER_HEADER, user.getId()))
+                .andExpect(status().isBadRequest());
+
+        verify(itemService, never()).findAll(user.getId(), from, size);
+    }
+
+    @Test
+    @SneakyThrows
+    void searchShouldReturnBadRequest() {
+        Integer from = -1;
+        Integer size = 10;
+        String text = "item";
+
+        mockMvc.perform(get("/items/search")
+                        .param("text", text)
+                        .param("from", String.valueOf(from))
+                        .param("size", String.valueOf(size))
+                        .contentType("application/json")
+                        .header(USER_HEADER, user.getId()))
+                .andExpect(status().isBadRequest());
+
+        verify(itemService, never()).search(user.getId(), text, from, size);
     }
 }

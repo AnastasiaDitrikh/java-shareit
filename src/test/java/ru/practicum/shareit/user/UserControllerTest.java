@@ -111,6 +111,24 @@ class UserControllerTest {
         assertEquals(objectMapper.writeValueAsString(userDtoToUpdate), result);
     }
 
+    @Test
+    @SneakyThrows
+    void updateUserWheUserEmailIsNotValidShouldReturnBadRequest() {
+        Long userId = 0L;
+        UserDto userDtoToUpdate = UserDto.builder()
+                .email("update.com")
+                .name("update")
+                .build();
+
+        when(userService.update(userId, userDtoToUpdate)).thenReturn(userDtoToUpdate);
+
+        mockMvc.perform(post("/users")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userDtoToUpdate)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).add(userDtoToUpdate);
+    }
 
     @Test
     @SneakyThrows

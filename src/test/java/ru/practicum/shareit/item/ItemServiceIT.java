@@ -70,7 +70,6 @@ public class ItemServiceIT {
             .build();
 
     private final ItemRequestDto requestDto = ItemRequestDto.builder()
-            .id(1L)
             .description("request description")
             .build();
 

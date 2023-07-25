@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import javax.validation.Valid;
@@ -24,26 +25,26 @@ public class ItemRequestController {
     private final ItemRequestService requestService;
 
     @PostMapping
-    public ItemRequestDto add(@RequestHeader(USER_HEADER) Long userId,
-                              @Valid @RequestBody ItemRequestDto requestDto) {
+    public ItemRequestDtoOut add(@RequestHeader(USER_HEADER) Long userId,
+                                 @Valid @RequestBody ItemRequestDto requestDto) {
         return requestService.add(userId, requestDto);
     }
 
     @GetMapping
-    public List<ItemRequestDto> getUserRequests(@RequestHeader(USER_HEADER) Long userId) {
+    public List<ItemRequestDtoOut> getUserRequests(@RequestHeader(USER_HEADER) Long userId) {
         return requestService.getUserRequests(userId);
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAllRequests(@RequestHeader(USER_HEADER) Long userId,
-                                               @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-                                               @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+    public List<ItemRequestDtoOut> getAllRequests(@RequestHeader(USER_HEADER) Long userId,
+                                                  @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+                                                  @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
         return requestService.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto get(@RequestHeader(USER_HEADER) Long userId,
-                              @PathVariable Long requestId) {
+    public ItemRequestDtoOut get(@RequestHeader(USER_HEADER) Long userId,
+                                 @PathVariable Long requestId) {
         return requestService.getRequestById(userId, requestId);
     }
 }
