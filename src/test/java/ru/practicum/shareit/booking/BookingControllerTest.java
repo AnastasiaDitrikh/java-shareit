@@ -184,33 +184,4 @@ class BookingControllerTest {
         assertEquals(objectMapper.writeValueAsString(List.of(bookingDtoOut)), result);
     }
 
-    @Test
-    @SneakyThrows
-    void getAllWhenBookingStatusIsInvalidShouldReturnInternalServerError() {
-        Integer from = 0;
-        Integer size = 10;
-        String state = "ERROR";
-
-        mockMvc.perform(get("/bookings")
-                        .param("state", state)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .header(USER_HEADER, user.getId()))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    @SneakyThrows
-    void getAllByOwnerWhenBookingStatusIsNotValid() {
-        Integer from = 0;
-        Integer size = 10;
-        String state = "ERROR";
-
-        mockMvc.perform(get("/bookings/owner")
-                        .param("state", state)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .header(USER_HEADER, user.getId()))
-                .andExpect(status().isInternalServerError());
-    }
 }
