@@ -11,6 +11,19 @@ import java.util.List;
 
 @UtilityClass
 public class ItemMapper {
+    public ItemDto toItemDto(Item item) {
+        ItemDto itemDto = new ItemDto(
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable());
+
+        if (item.getRequest() != null) {
+            itemDto.setRequestId(item.getRequest().getId());
+        }
+
+        return itemDto;
+    }
+
 
     public ItemDtoOut toItemDtoOut(Item item) {
         ItemDtoOut itemDtoOut = new ItemDtoOut(

@@ -8,10 +8,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentDtoOut;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.User;
 
 import java.util.List;
 
@@ -33,6 +37,21 @@ class ItemControllerTest {
 
     @MockBean
     private ItemService itemService;
+
+
+    private final User user = User.builder()
+            .id(1L)
+            .name("username")
+            .email("my@email.com")
+            .build();
+
+    private final Item item = Item.builder()
+            .id(1L)
+            .name("item name")
+            .description("description")
+            .owner(user)
+            .build();
+
 
     @Test
     @SneakyThrows
@@ -182,5 +201,32 @@ class ItemControllerTest {
                 .getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(itemsDtoToExpect), result);
+    }
+
+
+    @Test
+    @SneakyThrows
+    void createCommentWhenCommentIsValidShouldReturnStatusIsOk() {
+        ItemDtoOut itemDtoOut = itemService.add(user.getId(), ItemMapper.toItemDto(item));
+        CommentDto commentToAdd = CommentDto.builder()
+                .text("some comment")
+                .build();
+        CommentDtoOut commentDtoOut = CommentDtoOut.builder()
+                .id(1L)
+                .itemId(item.getId())
+                .text(commentToAdd.getText())
+                .build();
+        when(itemService.createComment(user.getId(), commentToAdd, item.getId())).thenReturn(commentDtoOut);
+
+        String result = mockMvc.perform(post("/items/{itemId}/comment", item.getId())
+                        .contentType("application/json")
+                        .header(USER_HEADER, user.getId())
+                        .content(objectMapper.writeValueAsString(commentToAdd)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(commentDtoOut), result);
     }
 }

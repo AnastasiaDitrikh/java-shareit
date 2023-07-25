@@ -53,18 +53,35 @@ class BookingControllerTest {
 
     private final BookingDto bookingDto = BookingDto.builder()
             .itemId(1L)
-            .start(LocalDateTime.now())
-            .end(LocalDateTime.now().plusDays(1L))
+            .start(LocalDateTime.now().plusDays(1L))
+            .end(LocalDateTime.now().plusDays(2L))
             .build();
 
     private final BookingDtoOut bookingDtoOut = BookingDtoOut.builder()
             .id(1L)
-            .start(LocalDateTime.now())
-            .end(LocalDateTime.now())
+            .start(LocalDateTime.now().plusDays(1L))
+            .end(LocalDateTime.now().plusDays(2L))
             .status(BookingStatus.WAITING)
             .booker(UserMapper.toUserDto(user))
             .item(ItemMapper.toItemDtoOut(item))
             .build();
+
+    @Test
+    @SneakyThrows
+    void createBookingWhenBookingIsValid() {
+        when(bookingService.add(user.getId(), bookingDto)).thenReturn(bookingDtoOut);
+
+        String result = mockMvc.perform(post("/bookings")
+                        .contentType("application/json")
+                        .header(USER_HEADER, user.getId())
+                        .content(objectMapper.writeValueAsString(bookingDto)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(bookingDtoOut), result);
+    }
 
     @Test
     @SneakyThrows
@@ -165,5 +182,35 @@ class BookingControllerTest {
                 .getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(List.of(bookingDtoOut)), result);
+    }
+
+    @Test
+    @SneakyThrows
+    void getAllWhenBookingStatusIsInvalidShouldReturnInternalServerError() {
+        Integer from = 0;
+        Integer size = 10;
+        String state = "ERROR";
+
+        mockMvc.perform(get("/bookings")
+                        .param("state", state)
+                        .param("from", String.valueOf(from))
+                        .param("size", String.valueOf(size))
+                        .header(USER_HEADER, user.getId()))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @SneakyThrows
+    void getAllByOwnerWhenBookingStatusIsNotValid() {
+        Integer from = 0;
+        Integer size = 10;
+        String state = "ERROR";
+
+        mockMvc.perform(get("/bookings/owner")
+                        .param("state", state)
+                        .param("from", String.valueOf(from))
+                        .param("size", String.valueOf(size))
+                        .header(USER_HEADER, user.getId()))
+                .andExpect(status().isInternalServerError());
     }
 }

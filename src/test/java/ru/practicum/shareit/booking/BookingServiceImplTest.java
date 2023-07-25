@@ -356,10 +356,23 @@ class BookingServiceImplTest {
         List<BookingDtoOut> actualBookingsDtoOut = bookingService.findAllOwner(user.getId(), "REJECTED", 0, 10);
 
         assertEquals(expectedBookingsDtoOut, actualBookingsDtoOut);
+
     }
 
     @Test
-    void getAllByOwnerWhenBookingStateIsNotValid_thenThrowIllegalArgumentException() {
+    void getAllByBookerWhenBookingStateREJECTED() {
+        List<BookingDtoOut> expectedBookingsDtoOut = List.of(BookingMapper.toBookingOut(booking));
+        when(userService.findById(user.getId())).thenReturn(userDto);
+        when(bookingRepository.findAllRejectedBookingsByBookerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
+                .thenReturn(List.of(booking));
+
+        List<BookingDtoOut> actualBookingsDtoOut = bookingService.findAll(user.getId(), "REJECTED", 0, 10);
+
+        assertEquals(expectedBookingsDtoOut, actualBookingsDtoOut);
+    }
+
+    @Test
+    void getAllByOwnerWhenBookingStateIsNotValidThenThrowIllegalArgumentException() {
         when(userService.findById(user.getId())).thenReturn(userDto);
 
         assertThrows(IllegalArgumentException.class,

@@ -21,4 +21,10 @@ public class ItemDto {
     @NotNull
     private Boolean available;
     private Long requestId;
+
+    public ItemDto(String name, String description, Boolean available) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+    }
 }
