@@ -8,11 +8,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.user.markers.Create;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.shareit.Constants.USER_HEADER;
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -21,7 +24,6 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 public class BookingController {
     private final BookingClient bookingClient;
-    private static final String USER_HEADER = "X-Sharer-User-Id";
 
     @GetMapping
     public ResponseEntity<Object> getBookings(@RequestHeader(USER_HEADER) long userId,
@@ -35,7 +37,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> bookItem(@RequestHeader(USER_HEADER) long userId,
-                                           @RequestBody @Valid BookItemRequestDto requestDto) {
+                                           @Validated(Create.class) @RequestBody @Valid BookItemRequestDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
         return bookingClient.bookItem(userId, requestDto);
     }

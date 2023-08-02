@@ -8,8 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 import static ru.practicum.shareit.item.ItemController.USER_HEADER;
@@ -24,7 +22,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDtoOut create(@RequestHeader(USER_HEADER) Long userId,
-                                @Valid @RequestBody BookingDto bookingDto) {
+                                @RequestBody BookingDto bookingDto) {
         log.info("POST запрос на создание нового бронирования вещи от пользователя c id: {} ", userId);
         return bookingService.add(userId, bookingDto);
     }
@@ -49,8 +47,8 @@ public class BookingController {
     @GetMapping
     public List<BookingDtoOut> findAll(@RequestHeader(USER_HEADER) Long userId,
                                        @RequestParam(value = "state", defaultValue = "ALL") String bookingState,
-                                       @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                       @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+                                       @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                       @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("GET запрос на получение списка всех бронирований текущего пользователя с id: {} и статусом {}", userId, bookingState);
         return bookingService.findAll(userId, bookingState, from, size);
     }
@@ -58,8 +56,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDtoOut> getAllOwner(@RequestHeader(USER_HEADER) Long ownerId,
                                            @RequestParam(value = "state", defaultValue = "ALL") String bookingState,
-                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                           @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+                                           @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                           @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("GET запрос на получение списка всех бронирований текущего владельца с id: {} и статусом {}", ownerId, bookingState);
         return bookingService.findAllOwner(ownerId, bookingState, from, size);
     }

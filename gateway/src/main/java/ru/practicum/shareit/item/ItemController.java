@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static ru.practicum.shareit.Constants.USER_HEADER;
+
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -18,7 +20,6 @@ import javax.validation.constraints.Min;
 public class ItemController {
 
     private final ItemClient itemClient;
-    private static final String USER_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(USER_HEADER) Long userId,

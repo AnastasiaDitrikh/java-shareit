@@ -10,8 +10,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoOut;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDtoOut add(@RequestHeader(USER_HEADER) Long userId,
-                          @Valid @RequestBody ItemDto itemDto) {
+                          @RequestBody ItemDto itemDto) {
         log.info("POST Запрос на добавление пользователем с id = {} предмета {}", userId, itemDto.toString());
         return itemService.add(userId, itemDto);
     }
@@ -48,8 +46,8 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDtoOut> findAll(@RequestHeader(USER_HEADER) Long userId,
-                                    @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                    @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size
+                                    @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                    @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
         log.info("GET Запрос на получение предметов пользователя с id = {}", userId);
         return itemService.findAll(userId, from, size);
@@ -58,8 +56,8 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDtoOut> searchItems(@RequestHeader(USER_HEADER) Long userId,
                                         @RequestParam(name = "text") String text,
-                                        @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                        @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+                                        @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                        @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("GET Запрос на поиск предметов c текстом = {}", text);
         return itemService.search(userId, text, from, size);
     }

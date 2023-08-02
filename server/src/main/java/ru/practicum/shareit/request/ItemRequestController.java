@@ -8,8 +8,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 import static ru.practicum.shareit.item.ItemController.USER_HEADER;
@@ -26,7 +24,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDtoOut add(@RequestHeader(USER_HEADER) Long userId,
-                                 @Valid @RequestBody ItemRequestDto requestDto) {
+                                 @RequestBody ItemRequestDto requestDto) {
         return requestService.add(userId, requestDto);
     }
 
@@ -37,8 +35,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDtoOut> getAllRequests(@RequestHeader(USER_HEADER) Long userId,
-                                                  @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-                                                  @RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size) {
+                                                  @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                  @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return requestService.getAllRequests(userId, from, size);
     }
 
