@@ -226,7 +226,6 @@ class ItemServiceImplTest {
         assertEquals(itemNotFoundException.getMessage(), "Вещи с " + item.getId() + " не существует");
     }
 
-
     @Test
     void getAllComments() {
         List<CommentDtoOut> expectedCommentsDto = List.of(CommentMapper.toCommentDtoOut(comment));
@@ -237,7 +236,6 @@ class ItemServiceImplTest {
         assertEquals(actualComments.size(), 1);
         assertEquals(actualComments, expectedCommentsDto);
     }
-
 
     @Test
     void createComment() {
@@ -276,7 +274,5 @@ class ItemServiceImplTest {
                 () -> itemService.createComment(user.getId(), CommentMapper.toCommentDto(comment), item.getId()));
 
         assertEquals(userBookingsNotFoundException.getMessage(), "У пользователя с id   " + user.getId() + " должно быть хотя бы одно бронирование предмета с id " + item.getId());
-
     }
-
 }

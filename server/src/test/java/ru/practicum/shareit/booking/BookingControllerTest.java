@@ -83,7 +83,6 @@ class BookingControllerTest {
         assertEquals(objectMapper.writeValueAsString(bookingDtoOut), result);
     }
 
-
     @Test
     @SneakyThrows
     void updateWhenBookingIsValid() {
@@ -166,5 +165,4 @@ class BookingControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(List.of(bookingDtoOut)), result);
     }
-
 }

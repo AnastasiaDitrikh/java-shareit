@@ -247,7 +247,6 @@ class BookingRepositoryTest {
 
             assertEquals(actualBooking.getId(), 1L);
         } else {
-
             fail();
         }
     }
@@ -262,7 +261,6 @@ class BookingRepositoryTest {
 
             assertEquals(actualBooking.getId(), 3L);
         } else {
-
             fail();
         }
     }

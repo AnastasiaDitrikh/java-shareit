@@ -53,7 +53,6 @@ class UserControllerTest {
         assertEquals(objectMapper.writeValueAsString(userDtoToCreate), result);
     }
 
-
     @Test
     @SneakyThrows
     void updateUserWhenUserIsValid() {
@@ -75,7 +74,6 @@ class UserControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(userDtoToUpdate), result);
     }
-
 
     @Test
     @SneakyThrows

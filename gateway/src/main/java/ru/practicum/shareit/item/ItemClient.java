@@ -20,11 +20,9 @@ public class ItemClient extends BaseClient {
 
     @Autowired
     public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
         );
     }
 
@@ -56,8 +54,7 @@ public class ItemClient extends BaseClient {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size,
-                "text", text
-        );
+                "text", text);
 
         return get("/search?from={from}&size={size}&text={text}", userId, parameters);
     }
@@ -65,5 +62,4 @@ public class ItemClient extends BaseClient {
     public ResponseEntity<Object> createComment(Long userId, CommentDto commentDto, Long itemId) {
         return post("/" + itemId + "/comment", userId, commentDto);
     }
-
 }

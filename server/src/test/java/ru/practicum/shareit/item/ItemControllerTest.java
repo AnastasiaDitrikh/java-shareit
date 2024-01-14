@@ -209,5 +209,4 @@ class ItemControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(commentDtoOut), result);
     }
-
 }

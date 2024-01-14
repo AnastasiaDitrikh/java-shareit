@@ -25,7 +25,6 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-
     private final UserDto userDto = UserDto.builder()
             .id(1L)
             .name("name")

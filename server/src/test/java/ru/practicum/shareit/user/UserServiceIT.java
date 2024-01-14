@@ -36,7 +36,6 @@ public class UserServiceIT {
     void getUserByIdWhenUserIdIsNotValid() {
         Long userId = 2L;
 
-        Assertions
-                .assertThrows(NotFoundException.class, () -> userService.findById(userId));
+        Assertions.assertThrows(NotFoundException.class, () -> userService.findById(userId));
     }
 }

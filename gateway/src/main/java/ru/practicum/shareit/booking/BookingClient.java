@@ -13,48 +13,87 @@ import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
 
+/**
+ * Класс BookingClient является клиентом для взаимодействия с API бронирования.
+ * Наследуется от класса BaseClient.
+ * Класс содержит методы для выполнения операций взаимодействия с API бронирования.
+ */
 @Service
 public class BookingClient extends BaseClient {
     private static final String API_PREFIX = "/bookings";
 
     @Autowired
     public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
         );
     }
 
+    /**
+     * Метод getBookings выполняет запрос на получение списка бронирований.
+     *
+     * @param userId ID пользователя
+     * @param state  состояние бронирования
+     * @param from   -
+     * @param size   размер
+     * @return объект ResponseEntity с результатом запроса
+     */
     public ResponseEntity<Object> getBookings(long userId, BookingState state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
-                "size", size
-        );
+                "size", size);
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-
+    /**
+     * Метод bookItem выполняет запрос на бронирование элемента.
+     *
+     * @param userId     ID пользователя
+     * @param requestDto объект BookItemRequestDto
+     * @return объект ResponseEntity с результатом запроса
+     */
     public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
         return post("", userId, requestDto);
     }
 
+    /**
+     * Метод getBooking выполняет запрос на получение бронирования по его ID.
+     *
+     * @param userId    ID пользователя
+     * @param bookingId ID бронирования
+     * @return объект ResponseEntity с результатом запроса
+     */
     public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
         return get("/" + bookingId, userId);
     }
 
+    /**
+     * Метод getAllOwner выполняет запрос на получение списка бронирований по владельцу элемента.
+     *
+     * @param ownerId ID владельца
+     * @param state   состояние бронирования
+     * @param from    -
+     * @param size    размер
+     * @return объект ResponseEntity с результатом запроса
+     */
     public ResponseEntity<Object> getAllOwner(long ownerId, BookingState state, int from, int size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
-                "size", size
-        );
-
+                "size", size);
         return get("/owner?state={state}&from={from}&size={size}", ownerId, parameters);
     }
 
+    /**
+     * Метод update выполняет запрос на обновление бронирования.
+     *
+     * @param userId     ID пользователя
+     * @param bookingId  ID бронирования
+     * @param approved   флаг подтверждения
+     * @return объект ResponseEntity с результатом запроса
+     */
     public ResponseEntity<Object> update(long userId, long bookingId, Boolean approved) {
         Map<String, Object> parameters = Map.of("approved", approved);
         return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);

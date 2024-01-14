@@ -95,13 +95,11 @@ class BookingServiceImplTest {
             .end(LocalDateTime.now().plusDays(2L))
             .build();
 
-
     private final BookingDto bookingDtoEndBeforeStart = BookingDto.builder()
             .itemId(1L)
             .start(LocalDateTime.now().plusDays(1L))
             .end(LocalDateTime.now().minusDays(1L))
             .build();
-
 
     @Test
     void create() {
@@ -114,7 +112,6 @@ class BookingServiceImplTest {
 
         assertEquals(expectedBookingDtoOut, actualBookingDtoOut);
     }
-
 
     @Test
     void createWhenEndIsBeforeStartShouldThrowValidationException() {
@@ -280,7 +277,6 @@ class BookingServiceImplTest {
         assertEquals(expectedBookingsDtoOut, actualBookingsDtoOut);
     }
 
-
     @Test
     void getAllByBookerWhenBookingStateIsNotValidShouldThrowIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class,
@@ -356,7 +352,6 @@ class BookingServiceImplTest {
         List<BookingDtoOut> actualBookingsDtoOut = bookingService.findAllOwner(user.getId(), "REJECTED", 0, 10);
 
         assertEquals(expectedBookingsDtoOut, actualBookingsDtoOut);
-
     }
 
     @Test
