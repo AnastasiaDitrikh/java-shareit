@@ -11,7 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Интерфейс BookingRepository, представляющий репозиторий для работы с сущностью Booking.
+ * Расширяет JpaRepository для наследования базовых методов работы с базой данных.
+ */
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "SELECT b.* FROM bookings as b " +
             "JOIN items as i ON i.id = b.item_id " +

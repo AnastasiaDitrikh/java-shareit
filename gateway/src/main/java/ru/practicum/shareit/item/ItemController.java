@@ -13,6 +13,9 @@ import javax.validation.constraints.Min;
 
 import static ru.practicum.shareit.Constants.USER_HEADER;
 
+/**
+ * Класс ItemController, представляющий контроллер для обработки HTTP-запросов, связанных с вещами.
+ */
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -21,6 +24,13 @@ public class ItemController {
 
     private final ItemClient itemClient;
 
+    /**
+     * Обработчик POST запроса на создание новой вещи.
+     *
+     * @param userId  Идентификатор пользователя.
+     * @param itemDto Объект ItemDto с информацией о вещи.
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(USER_HEADER) Long userId,
                                          @Valid @RequestBody ItemDto itemDto) {
@@ -28,6 +38,14 @@ public class ItemController {
         return itemClient.create(userId, itemDto);
     }
 
+    /**
+     * Обработчик PATCH запроса на обновление информации о вещи.
+     *
+     * @param userId  Идентификатор пользователя.
+     * @param itemDto Объект ItemDto с информацией о вещи.
+     * @param itemId  Идентификатор вещи.
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> update(@RequestHeader(USER_HEADER) Long userId,
                                          @RequestBody ItemDto itemDto,
@@ -36,6 +54,13 @@ public class ItemController {
         return itemClient.update(userId, itemId, itemDto);
     }
 
+    /**
+     * Обработчик GET запроса на получение информации о вещи.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param itemId Идентификатор вещи.
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> get(@RequestHeader(USER_HEADER) Long userId,
                                       @PathVariable Long itemId) {
@@ -43,6 +68,14 @@ public class ItemController {
         return itemClient.get(userId, itemId);
     }
 
+    /**
+     * Обработчик GET запроса на получение списка всех вещей пользователя.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param from   Параметр "from" для пагинации (начальный индекс).
+     * @param size   Параметр "size" для пагинации (размер страницы).
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @GetMapping
     public ResponseEntity<Object> getAll(@RequestHeader(USER_HEADER) Long userId,
                                          @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
@@ -51,6 +84,15 @@ public class ItemController {
         return itemClient.getAll(userId, from, size);
     }
 
+    /**
+     * Обработчик GET запроса на поиск вещей по тексту.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param text   Текст для поиска вещей.
+     * @param from   Параметр "from" для пагинации (начальный индекс).
+     * @param size   Параметр "size" для пагинации (размер страницы).
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestHeader(USER_HEADER) Long userId,
                                               @RequestParam(name = "text") String text,
@@ -60,6 +102,14 @@ public class ItemController {
         return itemClient.searchItems(userId, text, from, size);
     }
 
+    /**
+     * Обработчик POST запроса на создание комментария к вещи.
+     *
+     * @param userId     Идентификатор пользователя.
+     * @param commentDto Объект CommentDto с информацией о комментарии.
+     * @param itemId     Идентификатор вещи.
+     * @return Объект ResponseEntity с ответом сервера.
+     */
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader(USER_HEADER) Long userId,
                                                 @Validated @RequestBody CommentDto commentDto,

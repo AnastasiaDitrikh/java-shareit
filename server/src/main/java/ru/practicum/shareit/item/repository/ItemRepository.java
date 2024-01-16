@@ -8,7 +8,10 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-
+/**
+ * Интерфейс ItemRepository, представляющий репозиторий для работы с сущностью Item.
+ * Расширяет JpaRepository для наследования базовых методов работы с базой данных.
+ */
 public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i " +
             "from Item as i " +

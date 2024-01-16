@@ -5,6 +5,9 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoOut;
 
 import java.util.List;
 
+/**
+ * Интерфейс ItemRequestService, определяющий методы для работы с запросами на вещи
+ */
 public interface ItemRequestService {
     ItemRequestDtoOut add(Long userId, ItemRequestDto requestDto);
 

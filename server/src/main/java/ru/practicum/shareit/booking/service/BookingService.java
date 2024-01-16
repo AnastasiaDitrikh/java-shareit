@@ -5,7 +5,9 @@ import ru.practicum.shareit.booking.dto.BookingDtoOut;
 
 import java.util.List;
 
-
+/**
+ * Интерфейс BookingService, определяющий методы для работы с бронированиями
+ */
 public interface BookingService {
     BookingDtoOut add(Long userId, BookingDto bookingDto);
 

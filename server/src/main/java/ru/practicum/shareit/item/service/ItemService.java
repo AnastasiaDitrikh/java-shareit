@@ -7,6 +7,9 @@ import ru.practicum.shareit.item.dto.ItemDtoOut;
 
 import java.util.List;
 
+/**
+ * Интерфейс ItemService, определяющий методы для работы с вещами
+ */
 public interface ItemService {
 
     ItemDtoOut add(Long userId, ItemDto itemDto);
