@@ -22,4 +22,3 @@ public class ItemRequestDtoOut {
     private LocalDateTime created;
     private List<ItemDtoOut> items;
 }
-

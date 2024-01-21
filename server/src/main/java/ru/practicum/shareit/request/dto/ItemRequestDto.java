@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ItemRequestDto {
 
-
     private String description;
 }

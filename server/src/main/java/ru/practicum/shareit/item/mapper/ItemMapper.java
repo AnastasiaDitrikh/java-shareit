@@ -11,6 +11,13 @@ import java.util.List;
 
 @UtilityClass
 public class ItemMapper {
+
+    /**
+     * Преобразует объект вещи в объект ItemDto.
+     *
+     * @param item - объект вещи
+     * @return объект ItemDto
+     */
     public ItemDto toItemDto(Item item) {
         ItemDto itemDto = new ItemDto(
                 item.getName(),
@@ -24,7 +31,12 @@ public class ItemMapper {
         return itemDto;
     }
 
-
+    /**
+     * Преобразует объект вещи в объект ItemDtoOut.
+     *
+     * @param item - объект вещи
+     * @return объект ItemDtoOut
+     */
     public ItemDtoOut toItemDtoOut(Item item) {
         ItemDtoOut itemDtoOut = new ItemDtoOut(
                 item.getId(),
@@ -37,6 +49,15 @@ public class ItemMapper {
         return itemDtoOut;
     }
 
+    /**
+     * Преобразует объект вещи, последнее бронирование, список комментариев и следующее бронирование в объект ItemDtoOut.
+     *
+     * @param item        - объект вещи
+     * @param lastBooking - последнее бронирование
+     * @param comments    - список комментариев
+     * @param nextBooking - следующее бронирование
+     * @return объект ItemDtoOut
+     */
     public ItemDtoOut toItemDtoOut(Item item, BookingDtoOut lastBooking, List<CommentDtoOut> comments, BookingDtoOut nextBooking) {
         return new ItemDtoOut(
                 item.getId(),
@@ -48,7 +69,12 @@ public class ItemMapper {
                 nextBooking);
     }
 
-
+    /**
+     * Создает объект вещи на основе данных из ItemDto.
+     *
+     * @param itemDto - объект данных вещи
+     * @return объект Item
+     */
     public Item toItem(ItemDto itemDto) {
         return new Item(
                 itemDto.getName(),

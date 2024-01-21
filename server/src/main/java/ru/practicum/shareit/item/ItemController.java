@@ -21,6 +21,13 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    /**
+     * Добавляет новый предмет, отправленный пользователем, и возвращает информацию о добавленном предмете.
+     *
+     * @param userId  - ID пользователя из заголовка запроса
+     * @param itemDto - объект данных предмета
+     * @return объект ItemDtoOut с информацией о добавленном предмете
+     */
     @PostMapping
     public ItemDtoOut add(@RequestHeader(USER_HEADER) Long userId,
                           @RequestBody ItemDto itemDto) {
@@ -28,6 +35,14 @@ public class ItemController {
         return itemService.add(userId, itemDto);
     }
 
+    /**
+     * Обновляет информацию о предмете на основе данных, отправленных пользователем, и возвращает обновленную информацию о предмете.
+     *
+     * @param userId  - ID пользователя из заголовка запроса
+     * @param itemDto - объект данных предмета
+     * @param itemId  - ID предмета, который нужно обновить
+     * @return объект ItemDtoOut с обновленной информацией о предмете
+     */
     @PatchMapping("/{itemId}")
     public ItemDtoOut update(@RequestHeader(USER_HEADER) Long userId,
                              @RequestBody ItemDto itemDto,
@@ -36,23 +51,45 @@ public class ItemController {
         return itemService.update(userId, itemId, itemDto);
     }
 
+    /**
+     * Возвращает информацию о предмете с заданным ID.
+     *
+     * @param userId - ID пользователя из заголовка запроса
+     * @param itemId - ID предмета, который нужно найти
+     * @return объект ItemDtoOut с информацией о предмете
+     */
     @GetMapping("/{itemId}")
     public ItemDtoOut findById(@RequestHeader(USER_HEADER) Long userId,
-                               @PathVariable("itemId")
-                               Long itemId) {
+                               @PathVariable("itemId") Long itemId) {
         log.info("GET Запрос на получение предмета с id = {} пользователем с id = {} ", itemId, userId);
         return itemService.findItemById(userId, itemId);
     }
 
+    /**
+     * Возвращает список всех предметов пользователя.
+     *
+     * @param userId - ID пользователя из заголовка запроса
+     * @param from   - начальный индекс для пагинации (по умолчанию 0)
+     * @param size   - количество записей на страницу для пагинации (по умолчанию 10)
+     * @return список объектов ItemDtoOut с информацией о предметах пользователя
+     */
     @GetMapping
     public List<ItemDtoOut> findAll(@RequestHeader(USER_HEADER) Long userId,
                                     @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                    @RequestParam(value = "size", defaultValue = "10") Integer size
-    ) {
+                                    @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("GET Запрос на получение предметов пользователя с id = {}", userId);
         return itemService.findAll(userId, from, size);
     }
 
+    /**
+     * Выполняет поиск предметов по тексту и возвращает список найденных предметов.
+     *
+     * @param userId - ID пользователя из заголовка запроса
+     * @param text   - текст для поиска предметов
+     * @param from   - начальный индекс для пагинации (по умолчанию 0)
+     * @param size   - количество записей на страницу для пагинации (по умолчанию 10)
+     * @return список объектов ItemDtoOut с информацией о найденных предметах
+     */
     @GetMapping("/search")
     public List<ItemDtoOut> searchItems(@RequestHeader(USER_HEADER) Long userId,
                                         @RequestParam(name = "text") String text,
@@ -62,6 +99,14 @@ public class ItemController {
         return itemService.search(userId, text, from, size);
     }
 
+    /**
+     * Создает новый комментарий к предмету и возвращает информацию о созданном комментарии.
+     *
+     * @param userId     - ID пользователя из заголовка запроса
+     * @param commentDto - объект данных комментария
+     * @param itemId     - ID предмета, к которому добавляется комментарий
+     * @return объект CommentDtoOut с информацией о созданном комментарии
+     */
     @PostMapping("/{itemId}/comment")
     public CommentDtoOut createComment(@RequestHeader(USER_HEADER) Long userId,
                                        @Validated @RequestBody CommentDto commentDto,

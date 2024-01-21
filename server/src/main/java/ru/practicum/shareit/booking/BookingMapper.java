@@ -22,8 +22,8 @@ public class BookingMapper {
      *
      * @param user       Объект User, представляющий пользователя, совершающего бронирование.
      * @param item       Объект Item, представляющий брон
-     * @param bookingDto
-     * @return
+     * @param bookingDto Объект BookingDto, содержащий данные бронирования.
+     * @return Объект Booking, представляющий бронирование.
      */
     public Booking toBooking(User user, Item item, BookingDto bookingDto) {
         return Booking.builder()
@@ -35,6 +35,12 @@ public class BookingMapper {
                 .build();
     }
 
+    /**
+     * Преобразует объект бронирования (Booking) в объект BookingDtoOut.
+     *
+     * @param booking Объект бронирования, который требуется преобразовать.
+     * @return Объект BookingDtoOut, содержащий данные о бронировании.
+     */
     public BookingDtoOut toBookingOut(Booking booking) {
         return BookingDtoOut.builder()
                 .id(booking.getId())
@@ -46,6 +52,12 @@ public class BookingMapper {
                 .build();
     }
 
+    /**
+     * Преобразует объект бронирования (Booking) в объект BookingItemDto.
+     *
+     * @param booking Объект бронирования, который требуется преобразовать.
+     * @return Объект BookingItemDto, содержащий данные об идентификаторе бронирования и идентификаторе бронирующего пользователя.
+     */
     public static BookingItemDto toBookingItemDto(Booking booking) {
         return BookingItemDto.builder()
                 .id(booking.getId())

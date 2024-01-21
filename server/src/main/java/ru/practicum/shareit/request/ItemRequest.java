@@ -20,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "requests", schema = "public")
 public class ItemRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

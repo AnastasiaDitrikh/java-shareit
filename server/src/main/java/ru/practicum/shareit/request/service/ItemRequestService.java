@@ -16,5 +16,4 @@ public interface ItemRequestService {
     List<ItemRequestDtoOut> getAllRequests(Long userId, Integer from, Integer size);
 
     ItemRequestDtoOut getRequestById(Long userId, Long requestId);
-
 }
